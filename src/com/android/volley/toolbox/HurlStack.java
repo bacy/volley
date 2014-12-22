@@ -48,19 +48,6 @@ import com.android.volley.Request.Method;
  */
 public class HurlStack implements HttpStack {
 
-    private static final String    HEADER_CONTENT_TYPE              = "Content-Type";
-    private static final String    HEADER_CONTENT_DISPOSITION       = "Content-Disposition";
-    private static final String    HEADER_CONTENT_TRANSFER_ENCODING = "Content-Transfer-Encoding";
-    private static final String    CONTENT_TYPE_MULTIPART           = "multipart/form-data; charset=%s; boundary=%s";
-    private static final String    BINARY                           = "binary";
-    private static final String    CRLF                             = "\r\n";
-    private static final String    FORM_DATA                        = "form-data; name=\"%s\"";
-    private static final String    BOUNDARY_PREFIX                  = "--";
-    private static final String    CONTENT_TYPE_OCTET_STREAM        = "application/octet-stream";
-    private static final String    FILENAME                         = "filename=%s";
-    private static final String    COLON_SPACE                      = ": ";
-    private static final String    SEMICOLON_SPACE                  = "; ";
-
     /**
      * An interface for transforming URLs before use.
      */
@@ -266,6 +253,8 @@ public class HurlStack implements HttpStack {
         
         if (request instanceof MultiPartRequest) {
             final UploadMultipartEntity multipartEntity = ((MultiPartRequest<?>) request).getMultipartEntity();
+            // 防止所有文件写到内存中
+            connection.setFixedLengthStreamingMode((int)multipartEntity.getContentLength());
             multipartEntity.writeTo(connection.getOutputStream());
         } else {
             byte[] body = request.getBody();

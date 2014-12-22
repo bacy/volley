@@ -38,17 +38,15 @@ public abstract class MultiPartRequest<T> extends Request<T> {
     /**
      * Default connection timeout for Multipart requests
      */
-    public static final int TIMEOUT_MS = 30000;
+    public static final int TIMEOUT_MS = 60000;
 
     public MultiPartRequest(int method, String url, Listener<T> listener, ErrorListener errorlistener, LoadingListener loadingListener) {
 
         super(method, url, errorlistener);
         mListener = listener;
         
-        // 分包上传
         mMultipartEntity = new UploadMultipartEntity();
         
-        // 监听上传进度
         final ExecutorDelivery delivery = new ExecutorDelivery(new Handler(Looper.getMainLooper()));
         setLoadingListener(loadingListener);
         if (loadingListener != null) {
