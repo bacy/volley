@@ -18,10 +18,13 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
 
+import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.ImageLoader.ImageCache;
 
 public class BitmapDecoder {
@@ -33,7 +36,7 @@ public class BitmapDecoder {
     protected static final int BUFFER_SIZE = 32 * 1024; // 32 Kb
     
     /**
-     * ´ÓresÖĞ»ñÈ¡bitmap
+     * decode bitmap from resource
      * 
      * @param resId
      * @return
@@ -53,7 +56,8 @@ public class BitmapDecoder {
     }
 
     /**
-     * ´ÓassetÖĞ»ñÈ¡bitmap getBitmapFromAsset
+     * decode bitmap from asset
+     * bitmap getBitmapFromAsset
      * 
      * @param filePath
      * @return
@@ -74,7 +78,8 @@ public class BitmapDecoder {
     }
 
     /**
-     * ´ÓÏµÍ³×ÊÔ´ÖĞ»ñÈ¡bitmap getStreamFromContent
+     * decode bitmap from content
+     * getStreamFromContent
      * 
      * @param imageUri
      * @return
@@ -95,7 +100,7 @@ public class BitmapDecoder {
     }
     
     /**
-     * ´ÓÎÄ¼ş»ñÈ¡Í¼Æ¬Bitmap
+     * decode bitmap from sdcard
      * getBitmapFromFile
      * @param cache
      * @param path
@@ -126,7 +131,7 @@ public class BitmapDecoder {
         return mimeType.startsWith("video/");
     }
     
-    // »ñÈ¡×îºÏÊÊµÄËõ·Å±ÈÀı
+    // get the best size to decode bitmap
     static int findBestSampleSize(
             int actualWidth, int actualHeight, int desiredWidth, int desiredHeight) {
         double wr = (double) actualWidth / desiredWidth;
@@ -164,14 +169,6 @@ public class BitmapDecoder {
         return resized;
     }
     
-    /**
-     * ¸ù¾İ´«ÈëµÄkey»ñÈ¡¶ÔÓ¦ÎÄ¼şµÄÁ÷
-     * getInputStream
-     * @param context
-     * @param key
-     * @return
-     * @since 3.5
-     */
     @SuppressLint("DefaultLocale")
     public static InputStream getInputStream(Context context, String key) {
         if (key.startsWith(SCHEME_RES)) {
@@ -235,11 +232,11 @@ public class BitmapDecoder {
     }
     
     /**
-     * °ÑÁ÷×ª³Ébitmap
+     * ï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½bitmap
      * inputStream2Bitmap
-     * @param context ÉÏÏÂÎÄ
-     * @param key Á÷Ëù¶ÔÓ¦ÎÄ¼şµÄkey
-     * @param is Á÷
+     * @param context ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+     * @param key ï¿½ï¿½ï¿½ï¿½ï¿½Ó¦ï¿½Ä¼ï¿½ï¿½ï¿½key
+     * @param is ï¿½ï¿½
      * @param config
      * @param maxWidth
      * @param maxHeight
@@ -291,33 +288,18 @@ public class BitmapDecoder {
             } else {
                 bitmap = tempBitmap;
             }
+            // å¦‚æœæ˜¯æœ¬åœ°å›¾ç‰‡ï¼Œè¯»å–exifä¿¡æ¯ï¼Œå¤„ç†å›¾ç‰‡
+            if (canDefineExifParams(key)) {
+                bitmap = considerExactScaleAndOrientatiton(bitmap, defineExifOrientation(key));
+            }
         }
         return bitmap;
     }
     
-    /**
-     * °ÑbyteÊı×é×ª»»³Ébitmap£¬Ä¬ÈÏÍ¼Æ¬²ÉÓÃRGB_565
-     * bytes2Bitmap
-     * @param data byteÊı×é
-     * @param maxWidth ×î´ó¿í¶È
-     * @param maxHeight ×î´ó¸ß¶È
-     * @return
-     * @since 3.5
-     */
     public static Bitmap bytes2Bitmap(byte[] data, int maxWidth, int maxHeight) {
         return bytes2Bitmap(data, Config.RGB_565, maxWidth, maxHeight);
     }
     
-    /**
-     * °ÑbyteÊı×é×ª»»³Ébitmap
-     * bytes2Bitmap
-     * @param data byteÊı×é
-     * @param config Í¼Æ¬µÄÅäÖÃ
-     * @param maxWidth ×î´ó¿í¶È
-     * @param maxHeight ×î´ó¸ß¶È
-     * @return
-     * @since 3.5
-     */
     public static Bitmap bytes2Bitmap(byte[] data, Config config, int maxWidth, int maxHeight) {
         if (data == null) return null;
         BitmapFactory.Options decodeOptions = new BitmapFactory.Options();
@@ -364,4 +346,78 @@ public class BitmapDecoder {
         return bitmap;
     }
     
+    private static boolean canDefineExifParams(String imageUri) {
+        String uri = imageUri.toLowerCase();
+        return (uri.endsWith("jpg") || uri.endsWith("png") || uri.endsWith("jpeg")) && imageUri.startsWith("/");
+    }
+
+    private static ExifInfo defineExifOrientation(String imageUri) {
+        int rotation = 0;
+        boolean flip = false;
+        try {
+            ExifInterface exif = new ExifInterface(imageUri);
+            int exifOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+            switch (exifOrientation) {
+                case ExifInterface.ORIENTATION_FLIP_HORIZONTAL:
+                    flip = true;
+                case ExifInterface.ORIENTATION_NORMAL:
+                    rotation = 0;
+                    break;
+                case ExifInterface.ORIENTATION_TRANSVERSE:
+                    flip = true;
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                    rotation = 90;
+                    break;
+                case ExifInterface.ORIENTATION_FLIP_VERTICAL:
+                    flip = true;
+                case ExifInterface.ORIENTATION_ROTATE_180:
+                    rotation = 180;
+                    break;
+                case ExifInterface.ORIENTATION_TRANSPOSE:
+                    flip = true;
+                case ExifInterface.ORIENTATION_ROTATE_270:
+                    rotation = 270;
+                    break;
+            }
+        } catch (IOException e) {
+            VolleyLog.e("Can't read EXIF tags from file [%s]", imageUri);
+        }
+        return new ExifInfo(rotation, flip);
+    }
+    
+    protected static Bitmap considerExactScaleAndOrientatiton(Bitmap subsampledBitmap, ExifInfo exifInfo) {
+        Matrix m = new Matrix();
+        // Flip bitmap if need
+        if (exifInfo.flipHorizontal) {
+            m.postScale(-1, 1);
+        }
+        // Rotate bitmap if need
+        if (exifInfo.rotation != 0) {
+            m.postRotate(exifInfo.rotation);
+        }
+
+        Bitmap finalBitmap = Bitmap.createBitmap(subsampledBitmap, 0, 0, subsampledBitmap.getWidth(), subsampledBitmap
+                .getHeight(), m, true);
+        if (finalBitmap != subsampledBitmap) {
+            subsampledBitmap.recycle();
+        }
+        return finalBitmap;
+    }
+
+
+    protected static class ExifInfo {
+
+        public final int rotation;
+        public final boolean flipHorizontal;
+
+        protected ExifInfo() {
+            this.rotation = 0;
+            this.flipHorizontal = false;
+        }
+
+        protected ExifInfo(int rotation, boolean flipHorizontal) {
+            this.rotation = rotation;
+            this.flipHorizontal = flipHorizontal;
+        }
+    }
 }
