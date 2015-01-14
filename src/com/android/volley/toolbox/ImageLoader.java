@@ -67,6 +67,8 @@ public class ImageLoader {
 
     /** Runnable for in-flight response delivery. */
     private Runnable mRunnable;
+    
+    private Runnable mLoadingRunnable;
 
     /**
      * Simple cache adapter interface. If provided to the ImageLoader, it
@@ -306,21 +308,24 @@ public class ImageLoader {
     }
     
     private void onLoadImage(final String cacheKey, final long count, final long current) {
-        Runnable runnable = new Runnable() {
-            
-            @Override
-            public void run() {
-                BatchedImageRequest request = mInFlightRequests.get(cacheKey);
-                if (request != null) {
-                    for (ImageContainer container : request.mContainers) {
-                        if (container.mLoadingListener != null) {
-                            container.mLoadingListener.onLoading(count, current);
+        if (mLoadingRunnable == null) {
+            mLoadingRunnable = new Runnable() {
+                
+                @Override
+                public void run() {
+                    BatchedImageRequest request = mInFlightRequests.get(cacheKey);
+                    if (request != null) {
+                        for (ImageContainer container : request.mContainers) {
+                            if (container.mLoadingListener != null) {
+                                container.mLoadingListener.onLoading(count, current);
+                            }
                         }
                     }
+                    mLoadingRunnable = null;
                 }
-            }
-        };
-        mHandler.postDelayed(runnable, mBatchResponseDelayMs);
+            };
+            mHandler.post(mLoadingRunnable);
+        }
         
     }
 
