@@ -10,6 +10,8 @@ HttpTools提供get，post，upload，download，delete多种请求的封装，�
 
 BitmapTools的display方法支持各种图片的异步加载
 
+BitmapTools的display方法支持各种图片的异步加载
+
 ###4.diskcache默认使用DiskLruCache
 
 ###5.memoryCache默认使用LruCache
