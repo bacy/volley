@@ -255,7 +255,10 @@ public class BitmapTools {
                     tagContainer = null;
                     view.setTag(R.id.tag_listview_item, tagContainer);
                 }
-                mDisplayer.loadDefaultDisplay(view, curDisplayConfig);
+//                mDisplayer.loadDefaultDisplay(view, curDisplayConfig);
+                if (listener != null) {
+                    listener.onErrorResponse(new VolleyError("url can not be empty!"));
+                }
                 return null;
             }
             if (tagContainer != null && tagContainer.getRequestUrl() != null) {
