@@ -98,8 +98,6 @@ public class BasicNetwork implements Network {
             byte[] responseContents = null;
             Map<String, String> responseHeaders = Collections.emptyMap();
             try {
-                // chenbo add Ìí¼Óvolley¼ÓÔØ±¾µØÍ¼Æ¬µÄ¹¦ÄÜ
-                // Èç¹û¼ÓÔØµÄÊÇ±¾µØÍ¼Æ¬, data·µ»Ø¿Õ£¬ÈÃImageRequest×Ô¼ºµ¥¶À´¦Àí
                 if (!URLUtil.isNetworkUrl(request.getUrl())) {
                     return new NetworkResponse(responseContents);
                 }
@@ -135,16 +133,17 @@ public class BasicNetwork implements Network {
                 if (httpResponse.getEntity() != null) {
                     if (request instanceof DownloadRequest) {
                         DownloadRequest downloadRequest = (DownloadRequest) request;
-                        // Èç¹û·þÎñÆ÷²»Ö§³Örange£¬²»Òª¿ªÆô¶ÏµãÏÂÔØ
+                        // å¦‚æžœæœåŠ¡å™¨ä¸æ”¯æŒrangeï¼Œä¸è¦å¼€å¯æ–­ç‚¹ä¸‹è½½
                         if (downloadRequest.isResume() && !isSupportRange(httpResponse)) {
                             downloadRequest.setResume(false);
                         }
-                        if (statusCode == HttpStatus.SC_REQUESTED_RANGE_NOT_SATISFIABLE && downloadRequest.isResume()) {
-                            return new NetworkResponse(HttpStatus.SC_REQUESTED_RANGE_NOT_SATISFIABLE,
-                                    downloadRequest.getTarget().getBytes(),
-                                    responseHeaders, false);
+                        if (statusCode == HttpStatus.SC_REQUESTED_RANGE_NOT_SATISFIABLE) {
+                            return new NetworkResponse(HttpStatus.SC_REQUESTED_RANGE_NOT_SATISFIABLE, downloadRequest
+                                    .getTarget().getBytes(), responseHeaders, false);
+                        } else if (statusCode >= 300) {
+                            responseContents = entityToBytes(delivery, request, httpResponse.getEntity());
                         } else {
-                            responseContents = handleEntity(delivery, (DownloadRequest)request, httpResponse.getEntity());
+                            responseContents = handleEntity(delivery, (DownloadRequest) request, httpResponse.getEntity());
                         }
                     } else{
                         responseContents = entityToBytes(delivery, request, httpResponse.getEntity());
@@ -203,8 +202,8 @@ public class BasicNetwork implements Network {
                     throw new NetworkError(networkResponse);
                 }
             } finally {
-                // ³Â²¨ add
-                // Ç°ÃæµÄreturnÓÐ¿ÉÄÜµ¼ÖÂÁ÷Ã»ÓÐ¹Ø±Õ£¬Ê¹ÓÃhttpClientµÄÊ±ºò£¬¿ÉÄÜµ¼ÖÂÁ¬½Ó³ØÂúÔØ
+                // ï¿½Â²ï¿½ add
+                // Ç°ï¿½ï¿½ï¿½returnï¿½Ð¿ï¿½ï¿½Üµï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½Ð¹Ø±Õ£ï¿½Ê¹ï¿½ï¿½httpClientï¿½ï¿½Ê±ï¿½ò£¬¿ï¿½ï¿½Üµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó³ï¿½ï¿½ï¿½ï¿½ï¿½
                 try {
                     if (httpResponse != null && httpResponse.getEntity() != null) {
                         httpResponse.getEntity().getContent().close();
@@ -354,7 +353,7 @@ public class BasicNetwork implements Network {
             int readLen = 0;
             byte[] buffer = new byte[1024];
             LoadingListener listener = request.getLoadingListener();
-            while (!request.isCanceled() && !(current >= count) && ((readLen = input.read(buffer,0,1024)) > 0) ) {//Î´È«²¿¶ÁÈ¡
+            while (!request.isCanceled() && !(current >= count) && ((readLen = input.read(buffer,0,1024)) > 0) ) {//Î´È«ï¿½ï¿½ï¿½ï¿½È¡
                 os.write(buffer, 0, readLen);
                 current += readLen;
                 if (listener != null) {
@@ -368,7 +367,7 @@ public class BasicNetwork implements Network {
             if (listener != null) {
                 delivery.postLoading(request, count, current);
             }
-            if(request.isCanceled() && current < count){ //ÓÃ»§Ö÷¶¯Í£Ö¹
+            if(request.isCanceled() && current < count){ //ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½Í£Ö¹
                 throw new IOException("user stop download thread");
             }
         } finally {
