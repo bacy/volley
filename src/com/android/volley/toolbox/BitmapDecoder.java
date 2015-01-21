@@ -28,9 +28,9 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.ImageLoader.ImageCache;
 
 public class BitmapDecoder {
-    public static final String SCHEME_RES = "android_res://";
-    public static final String SCHEME_ASSET = "android_asset://";
-    public static final String SCHEME_CONTENT = "android_content://";
+    public static final String SCHEME_RES = "drawable://";
+    public static final String SCHEME_ASSET = "assets://";
+    public static final String SCHEME_CONTENT = "content://";
     
     protected static final String CONTENT_CONTACTS_URI_PREFIX = "content://com.android.contacts/";
     protected static final int BUFFER_SIZE = 32 * 1024; // 32 Kb

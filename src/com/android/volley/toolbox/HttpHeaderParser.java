@@ -40,7 +40,6 @@ public class HttpHeaderParser {
         long now = System.currentTimeMillis();
 
         Map<String, String> headers = response.headers;
-//        LogUtils.d("bacy", headers.toString());
 
         long serverDate = 0;
         long serverExpires = 0;
@@ -97,7 +96,6 @@ public class HttpHeaderParser {
         entry.ttl = entry.softTtl;
         entry.serverDate = serverDate;
         entry.responseHeaders = headers;
-//        LogUtils.d("bacy", entry.toString());
         return entry;
     }
 
@@ -116,7 +114,7 @@ public class HttpHeaderParser {
 
     /**
      * Returns the charset specified in the Content-Type of this header,
-     * or the HTTP default (ISO-8859-1) if none can be found.
+     * or the HTTP default (UTF_8) if none can be found.
      */
     public static String parseCharset(Map<String, String> headers) {
         String contentType = headers.get(HTTP.CONTENT_TYPE);

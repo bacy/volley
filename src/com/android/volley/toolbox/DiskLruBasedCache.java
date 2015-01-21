@@ -18,7 +18,6 @@ import com.android.volley.Utils;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.DiskBasedCache.CacheHeader;
 import com.android.volley.toolbox.DiskBasedCache.CountingInputStream;
-import com.android.volley.toolbox.DiskLruBasedCache.ImageCacheParams;
 import com.android.volley.toolbox.disklrucache.DiskLruCache;
 
 /**
@@ -32,7 +31,7 @@ public class DiskLruBasedCache implements Cache {
     private static final int DEFAULT_MEM_CACHE_SIZE = 1024 * 5; // 5MB
 
     // Default disk cache size in bytes
-    private static final int DEFAULT_DISK_CACHE_SIZE = 1024 * 1024 * 100; // 64MB
+    private static final int DEFAULT_DISK_CACHE_SIZE = 1024 * 1024 * 100; // 100MB
     // Constants to easily toggle various caches
     
     private static final boolean DEFAULT_MEM_CACHE_ENABLED = true;
@@ -113,16 +112,17 @@ public class DiskLruBasedCache implements Cache {
                     if (!diskCacheDir.exists()) {
                         diskCacheDir.mkdirs();
                     }
-                    if (Utils.getUsableSpace(diskCacheDir) > mCacheParams.diskCacheSize) {
-                        try {
-                            mDiskLruCache = DiskLruCache.open(diskCacheDir, APP_VERSION, VALUE_COUNT, mCacheParams.diskCacheSize);
-                            if (BuildConfig.DEBUG) {
-                            	VolleyLog.d("Disk cache initialized");
-                            }
-                        } catch (final IOException e) {
-                            mCacheParams.diskCacheDir = null;
-                            VolleyLog.e("initDiskCache - " + e);
+                    if (Utils.getUsableSpace(diskCacheDir) < mCacheParams.diskCacheSize) {
+                        mCacheParams.diskCacheSize = Utils.getUsableSpace(diskCacheDir);
+                    }
+                    try {
+                        mDiskLruCache = DiskLruCache.open(diskCacheDir, APP_VERSION, VALUE_COUNT, mCacheParams.diskCacheSize);
+                        if (BuildConfig.DEBUG) {
+                            VolleyLog.d("Disk cache initialized");
                         }
+                    } catch (final IOException e) {
+                        mCacheParams.diskCacheDir = null;
+                        VolleyLog.e("initDiskCache - " + e);
                     }
                 }
             }
@@ -136,7 +136,7 @@ public class DiskLruBasedCache implements Cache {
      */
     public static class ImageCacheParams {
         public int memCacheSize = DEFAULT_MEM_CACHE_SIZE;
-        public int diskCacheSize = DEFAULT_DISK_CACHE_SIZE;
+        public long diskCacheSize = DEFAULT_DISK_CACHE_SIZE;
         public File diskCacheDir;
         public CompressFormat compressFormat = DEFAULT_COMPRESS_FORMAT;
         public int compressQuality = DEFAULT_COMPRESS_QUALITY;
