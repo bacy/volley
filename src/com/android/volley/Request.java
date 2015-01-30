@@ -79,9 +79,11 @@ public abstract class Request<T> implements Comparable<Request<T>> {
     /** Listener interface for errors. */
     private final Response.ErrorListener mErrorListener;
     
-    // chenbo add 添加get请求进度监听
+    // chenbo add 
     private long mRate = 100;
     private Response.LoadingListener mLoadingListener;
+    /**  Whether or not this request use gzip **/
+    private boolean mShouldGzip = true;
 
     /** Sequence number of this request, used to enforce FIFO ordering. */
     private Integer mSequence;
@@ -637,5 +639,13 @@ public abstract class Request<T> implements Comparable<Request<T>> {
 
     public void setRate(long mRate) {
         this.mRate = mRate;
+    }
+    
+    public boolean isShouldGzip() {
+        return mShouldGzip;
+    }
+
+    public void setShouldGzip(boolean shouldGzip) {
+        this.mShouldGzip = shouldGzip;
     }
 }

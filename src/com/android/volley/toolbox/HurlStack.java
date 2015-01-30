@@ -90,7 +90,9 @@ public class HurlStack implements HttpStack {
         String url = request.getUrl();
         HashMap<String, String> map = new HashMap<String, String>();
         // chenbo add gzip support,new user-agent
-        map.put(HEADER_ACCEPT_ENCODING, ENCODING_GZIP);
+        if (request.isShouldGzip()) {
+            map.put(HEADER_ACCEPT_ENCODING, ENCODING_GZIP);
+        }
         map.put(USER_AGENT, mUserAgent);
         // end
         map.putAll(request.getHeaders());

@@ -15,9 +15,11 @@ public class DownloadRequest extends StringRequest {
     public DownloadRequest(String url, Listener<String> listener, ErrorListener errorListener,
             LoadingListener loadingListener) {
         super(Method.GET, url, listener, errorListener, loadingListener);
-        // ÏÂÔØÎÄ¼ş´ó£¬Ê§°Ü¿ÉÄÜĞÔ±È½Ï´ó£¬ËùÒÔ¼Ó´óretry´ÎÊı
+        // ä¸‹è½½æ–‡ä»¶å¤§ï¼Œå¤±è´¥å¯èƒ½æ€§æ¯”è¾ƒå¤§ï¼Œæ‰€ä»¥åŠ å¤§retryæ¬¡æ•°
         setRetryPolicy(
                 new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS, 5, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        // å…³é—­gzip
+        setShouldGzip(false);
     }
 
     private String target;
@@ -53,7 +55,7 @@ public class DownloadRequest extends StringRequest {
     
     
     /**
-     * Í£Ö¹ÏÂÔØ£¨Èç¹ûÕıÔÚÏÂÔØ£¬Í£Ö¹µô£¬Èç¹ûÕıÔÚµÈ´ı£¬È¡Ïûµô£©
+     * Í£Ö¹ï¿½ï¿½ï¿½Ø£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø£ï¿½Í£Ö¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÚµÈ´ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½
      * stopDownload
      * @since 3.5
      */

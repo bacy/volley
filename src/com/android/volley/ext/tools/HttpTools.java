@@ -141,7 +141,7 @@ public class HttpTools {
                 paramsMap.put(key, (String) value);
             }
         }
-        VolleyLog.d("volley", "upload->" + url + ",file->" + fileParams + "form->" + paramsMap);
+        VolleyLog.d("volley", "upload->" + url + "\nfile->" + fileParams + "\nform->" + paramsMap);
         if (httpResult != null) {
             httpResult.onStart();
         }

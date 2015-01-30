@@ -81,12 +81,13 @@ public class ImageRequest extends Request<Bitmap> {
         mMaxWidth = maxWidth;
         mMaxHeight = maxHeight;
         mContext = context;
-        // Èç¹û¼ÓÔØµÄÊÇ±¾µØÍ¼Æ¬£¬²»·ÅÈëdisk-cacheÄ¿Â¼ÖĞ
+        // å¦‚æœåŠ è½½çš„æ˜¯æœ¬åœ°å›¾ç‰‡ï¼Œä¸æ”¾å…¥disk-cacheç›®å½•ä¸­
         if (url.startsWith("http") || url.startsWith("https")) {
             setShouldCache(true);
         } else {
             setShouldCache(false);
         }
+        setShouldGzip(false);
     }
 
     @Override

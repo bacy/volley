@@ -75,8 +75,10 @@ public class HttpClientStack implements HttpStack {
     public HttpResponse performRequest(Request<?> request, Map<String, String> additionalHeaders)
             throws IOException, AuthFailureError {
         HttpUriRequest httpRequest = createHttpRequest(request, additionalHeaders);
-        // add gzip surpport
-        httpRequest.addHeader(HEADER_ACCEPT_ENCODING, ENCODING_GZIP);
+        // add gzip support, not all request need gzip support
+        if (request.isShouldGzip()) {
+            httpRequest.addHeader(HEADER_ACCEPT_ENCODING, ENCODING_GZIP);
+        }
         addHeaders(httpRequest, additionalHeaders);
         addHeaders(httpRequest, request.getHeaders());
         onPrepareRequest(httpRequest);

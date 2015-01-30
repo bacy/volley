@@ -15,7 +15,6 @@ import android.view.View.OnAttachStateChangeListener;
 import android.view.animation.Animation;
 import android.widget.ImageView;
 
-import com.android.volley.R;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.LoadingListener;
 import com.android.volley.VolleyError;
@@ -32,7 +31,8 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.Volley;
 
 public class BitmapTools {
-    
+    // TODO i think nobody will you this id ^_^
+    private static final int TAG_ID = 0xffffffff;
     private ImageLoader mImageLoader;
     private static RequestQueue mRequestQueue;
     private BitmapDisplayConfig mDisplayConfig;
@@ -245,7 +245,7 @@ public class BitmapTools {
         } else {
             ImageContainer tagContainer = null;
              @SuppressWarnings("unchecked")
-            WeakReference<ImageContainer> ref = (WeakReference<ImageContainer>) view.getTag(R.id.tag_listview_item);
+            WeakReference<ImageContainer> ref = (WeakReference<ImageContainer>) view.getTag(TAG_ID);
              if (ref != null) {
                  tagContainer = ref.get();
              }
@@ -253,7 +253,7 @@ public class BitmapTools {
                 if (tagContainer != null) {
                     tagContainer.cancelRequest();
                     tagContainer = null;
-                    view.setTag(R.id.tag_listview_item, tagContainer);
+                    view.setTag(TAG_ID, tagContainer);
                 }
 //                mDisplayer.loadDefaultDisplay(view, curDisplayConfig);
                 if (listener != null) {
@@ -270,14 +270,14 @@ public class BitmapTools {
                 }
             }
             final ImageContainer container = mImageLoader.get(mContext, uri, listener, loadingListener, displayConfig.bitmapWidth, displayConfig.bitmapHeight);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1 && view.getTag(R.id.tag_listview_item) == null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1 && view.getTag(TAG_ID) == null) {
             	 view.addOnAttachStateChangeListener(new OnAttachStateChangeListener() {
                      
 					@SuppressWarnings("deprecation")
                     @Override
                      public void onViewDetachedFromWindow(View v) {
                          container.cancelRequest();
-                         view.setTag(R.id.tag_listview_item, null);
+                         view.setTag(TAG_ID, null);
                          if (view instanceof ImageView) {
                              ((ImageView) view).setImageBitmap(null);
                          } else {
@@ -292,7 +292,7 @@ public class BitmapTools {
                      }
                  });
             }
-            view.setTag(R.id.tag_listview_item, new WeakReference<ImageContainer>(container));
+            view.setTag(TAG_ID, new WeakReference<ImageContainer>(container));
             return container;
         }
     }
