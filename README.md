@@ -72,8 +72,8 @@ BitmapTools中提供多种方法配置BitmapDisplayConfig，配置过后，Bitma
     bitmapTools.resume();
     bitmapTools.pause();
 ###7.DbTools模块
-数据库模块集成了xUtils中DbUtils。
-使用方法参考xUtils。
-注意：
-注解类型不要混淆，需要映射的实体类不要混淆
+数据库模块集成了xUtils中DbUtils。  
+使用方法参考xUtils。  
+注意：  
+注解类型不要混淆，需要映射的实体类不要混淆  
 添加混淆配置：-keep class * extends java.lang.annotation.Annotation { *; }
