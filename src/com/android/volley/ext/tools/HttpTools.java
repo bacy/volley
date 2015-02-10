@@ -50,7 +50,7 @@ public class HttpTools {
     }
     
     /**
-     * get ����
+     * get 请求
      * @param url
      * @param paramsMap
      * @param httpResult
@@ -60,7 +60,7 @@ public class HttpTools {
     }
     
     /**
-     * get ����
+     * get 请求
      * get
      * @param requestInfo
      * @param httpResult
@@ -71,7 +71,7 @@ public class HttpTools {
     }
 
     /**
-     * post ����
+     * post请求
      * @param url
      * @param paramsMap
      * @param httpResult
@@ -81,7 +81,7 @@ public class HttpTools {
     }
     
     /**
-     * post ����
+     * post请求
      * post
      * @param requestInfo
      * @param httpResult
@@ -92,7 +92,7 @@ public class HttpTools {
     }
     
     /**
-     * delete ɾ������
+     * delete 请求
      * @param requestInfo
      * @param httpResult
      * @since 3.5
@@ -102,7 +102,7 @@ public class HttpTools {
     }
     
     /**
-     * put ν��
+     * put 请求
      * @param requestInfo
      * @param httpResult
      * @since 3.5
@@ -112,7 +112,7 @@ public class HttpTools {
     }
 
     /**
-     * �ϴ��ļ� upload
+     * upload 请求
      * 
      * @param url
      * @param paramsMap

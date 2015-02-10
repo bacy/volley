@@ -29,7 +29,13 @@ import com.android.volley.toolbox.ImageLoader.ImageContainer;
 import com.android.volley.toolbox.ImageLoader.ImageListener;
 import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.Volley;
-
+/**
+ * 图片加载工具类
+ * BitmapTools
+ * chenbo
+ * 2014年8月8日 下午4:12:39
+ * @version 3.4
+ */
 public class BitmapTools {
     // TODO i think nobody will you this id ^_^
     private static final int TAG_ID = 0xffffffff;
@@ -312,7 +318,7 @@ public class BitmapTools {
     }
     
     /**
-     * ��res�л�ȡbitmap
+     * 从res中获取bitmap
      * @param resId
      * @return
      */
@@ -321,7 +327,7 @@ public class BitmapTools {
     }
     
     /**
-     * ��asset�л�ȡbitmap
+     * 从asset中获取bitmap
      * getBitmapFromAsset
      * @param filePath
      * @return
@@ -332,7 +338,7 @@ public class BitmapTools {
     }
     
     /**
-     * ��ϵͳ��Դ�л�ȡbitmap
+     * 从系统资源中获取bitmap
      * getStreamFromContent
      * @param imageUri
      * @return
@@ -343,7 +349,7 @@ public class BitmapTools {
     }
     
     /**
-     * ��sdcard���ļ��л�ȡbitmap
+     * 从sdcard的文件中获取bitmap
      * getBitmapFromFile
      * @param path
      * @return
@@ -362,7 +368,7 @@ public class BitmapTools {
     }
     
     /**
-     * ����ͼƬ��������
+     * 继续图片加载任务
      * resume
      * @since 3.6
      */
@@ -373,7 +379,7 @@ public class BitmapTools {
     }
     
     /**
-     * ��ͣ���м��ص�����
+     * 暂停所有加载的任务
      * pause
      * @since 3.6
      */
@@ -384,7 +390,7 @@ public class BitmapTools {
     }
     
     /**
-     * ȡ�����м�����ʼ������
+     * 取消所有即将开始的请求
      * cancelAllRequest
      * @since 3.6
      */
@@ -395,9 +401,9 @@ public class BitmapTools {
     }
     
     /**
-     * ����ĳ��ͼƬ���ڴ滺��
+     * 清除掉某张图片的内存缓存
      * clearMemoryCache
-     * @param key ͼƬ��url
+     * @param key 图片的url
      * @since 3.6
      */
     public void clearMemoryCache(String key) {
@@ -407,7 +413,7 @@ public class BitmapTools {
     }
     
     /**
-     * ���ָ����ͼƬ����
+     * 清除指定的图片缓存
      * clearMemoryCache
      * @param keys
      * @since 3.6
@@ -421,7 +427,7 @@ public class BitmapTools {
     }
     
     /**
-     * �������е�ͼƬ���ڴ滺��
+     * 清除掉所有的图片的内存缓存
      * clearMemoryCache
      * @since 3.6
      */
@@ -430,7 +436,7 @@ public class BitmapTools {
     }
     
     /**
-     * �������е�ͼƬ���̻���
+     * 清除掉所有的图片磁盘缓存
      * clearDiskCache
      * @param callback
      * @since 3.6
@@ -451,10 +457,10 @@ public class BitmapTools {
         if (view == null)
             return;
         if (success) {
-            // ��ʾһ��Ĭ��ͼƬ
+            // 显示一张默认图片
             if (container.getBitmap() == null) {
                 mDisplayer.loadDefaultDisplay(view, displayConfig);
-            // ��ʾ���غõ�ͼƬ
+             // 显示加载好的图片
             } else {
                 displayConfig.isImmediate = isImmediate;
                 mDisplayer.loadCompletedisplay(view, container.getBitmap(), displayConfig);
@@ -490,7 +496,7 @@ public class BitmapTools {
         public RoundConfig roundConfig;
         public Bitmap defaultBitmap;
         
-        // �Ƿ�ֱ��չʾ
+        // 是否直接加载图片
         public boolean isImmediate;
         
         public BitmapDisplayConfig() {

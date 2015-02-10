@@ -81,7 +81,7 @@ public class ImageRequest extends Request<Bitmap> {
         mMaxWidth = maxWidth;
         mMaxHeight = maxHeight;
         mContext = context;
-        // 如果加载的是本地图片，不放入disk-cache目录中
+        // 如果加载的是本地图片，不放入disk-cache目录
         if (url.startsWith("http") || url.startsWith("https")) {
             setShouldCache(true);
         } else {

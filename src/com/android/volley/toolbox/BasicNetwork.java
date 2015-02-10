@@ -133,7 +133,7 @@ public class BasicNetwork implements Network {
                 if (httpResponse.getEntity() != null) {
                     if (request instanceof DownloadRequest) {
                         DownloadRequest downloadRequest = (DownloadRequest) request;
-                        // 如果服务器不支持range，不要开启断点下载
+                        // 如果服务器不支持range，不要开启断点下
                         if (downloadRequest.isResume() && !isSupportRange(httpResponse)) {
                             downloadRequest.setResume(false);
                         }
