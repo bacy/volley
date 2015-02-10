@@ -108,7 +108,7 @@ public class Foreign extends Column {
                         Column column = TableUtils.getColumnOrId(foreignEntityType, foreignColumnName);
                         columnValue = column.getColumnValue(foreignEntities.get(0));
 
-                        // 仅自动关联外键
+                        // 仅自动关联外
                         Table table = this.getTable();
                         if (table != null && column instanceof Id) {
                             for (Object foreignObj : foreignEntities) {
