@@ -55,7 +55,7 @@ public class DownloadRequest extends StringRequest {
     
     
     /**
-     * ֹͣ���أ�����������أ�ֹͣ����������ڵȴ�ȡ�����
+     * 停止下载
      * stopDownload
      * @since 3.5
      */

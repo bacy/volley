@@ -7,10 +7,9 @@ import java.io.OutputStream;
 import com.android.volley.toolbox.multipart.MultipartEntity;
 
 /**
- * 监听上传进度
+ * 甯﹁繘搴︾洃鍚殑涓婁紶Entity
  * UploadMultipartEntity
  * chenbo
- * 2014年12月10日 上午11:19:32
  * @version 3.6
  */
 public class UploadMultipartEntity extends MultipartEntity {

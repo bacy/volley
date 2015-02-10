@@ -18,11 +18,6 @@ import android.os.StatFs;
 import android.os.StrictMode;
 import android.util.Log;
 
-/**
- * ¹¤¾ßÀà
- * @author chenbo
- *
- */
 public class Utils {
     
     public static final int ANIMATION_FADE_IN_TIME = 200;
@@ -100,7 +95,7 @@ public class Utils {
         return (long) stats.getBlockSize() * (long) stats.getAvailableBlocks();
     }
     
-    // µÝ¹é
+    // ï¿½Ý¹ï¿½
     public static long getFileSize(File f) {
         long size = 0;
         File flist[] = f.listFiles();
