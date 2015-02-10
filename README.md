@@ -1,8 +1,8 @@
 volley
 ======
-需要的权限
-`<uses-permission android:name="android.permission.INTERNET" />
-<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />`
+需要的权限  
+<uses-permission android:name="android.permission.INTERNET" />
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
 ###1.支持http 大文件上传以及下载，支持断点下载，下载中允许暂停，下次从暂停地方开始下载
 ####初始化
