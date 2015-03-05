@@ -5,8 +5,8 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Build;
-import android.support.v4.util.LruCache;
 
+import com.android.volley.LruCache;
 import com.android.volley.Utils;
 import com.android.volley.toolbox.ImageLoader.ImageCache;
 

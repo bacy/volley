@@ -7,9 +7,9 @@ import java.io.OutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import android.app.FragmentManager;
 import android.content.Context;
 import android.graphics.Bitmap.CompressFormat;
-import android.support.v4.app.FragmentManager;
 import android.util.Log;
 
 import com.android.volley.BuildConfig;
