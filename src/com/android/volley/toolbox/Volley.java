@@ -27,6 +27,7 @@ import android.os.Build;
 
 import com.android.volley.Network;
 import com.android.volley.RequestQueue;
+import com.android.volley.VolleyLog;
 
 @TargetApi(Build.VERSION_CODES.FROYO)
 public class Volley {
@@ -118,5 +119,13 @@ public class Volley {
     
     public static File getDefaultCacheFile(Context context) {
         return new File(context.getCacheDir(), DEFAULT_CACHE_DIR);
+    }
+    
+    /**
+     * 是否开启volley的日志输出
+     * @param isOpened
+     */
+    public void openLog(boolean isOpened) {
+    	VolleyLog.DEBUG = isOpened;
     }
 }

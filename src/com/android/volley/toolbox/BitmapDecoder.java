@@ -386,6 +386,9 @@ public class BitmapDecoder {
     }
     
     protected static Bitmap considerExactScaleAndOrientatiton(Bitmap subsampledBitmap, ExifInfo exifInfo) {
+    	if (subsampledBitmap == null) {
+            return subsampledBitmap;
+        }
         Matrix m = new Matrix();
         // Flip bitmap if need
         if (exifInfo.flipHorizontal) {

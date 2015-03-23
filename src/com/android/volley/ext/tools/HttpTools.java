@@ -141,7 +141,7 @@ public class HttpTools {
                 paramsMap.put(key, (String) value);
             }
         }
-        VolleyLog.d("volley", "upload->" + url + "\nfile->" + fileParams + "\nform->" + paramsMap);
+        VolleyLog.d("upload->%s" + url + "\nfile->" + fileParams + "\nform->" + paramsMap);
         if (httpResult != null) {
             httpResult.onStart();
         }
@@ -224,6 +224,7 @@ public class HttpTools {
     }
     
     public DownloadRequest download(String url, String target, final boolean isResume, final HttpCallback httpResult) {
+    	VolleyLog.d("download->%s", url);
         DownloadRequest request = new DownloadRequest(url, new Response.Listener<String>() {
 
             @Override
@@ -296,11 +297,11 @@ public class HttpTools {
         switch (method) {
         case Request.Method.GET:
             requestInfo.url = requestInfo.getFullUrl();
-            VolleyLog.d("volley", "get->" + requestInfo.url);
+            VolleyLog.d("get->%s", requestInfo.getUrl());
             break;
         case Request.Method.DELETE:
             requestInfo.url = requestInfo.getFullUrl();
-            VolleyLog.d("volley", "delete->" + requestInfo.url);
+            VolleyLog.d("delete->%s", requestInfo.getUrl());
             break;
 
         default:
@@ -345,15 +346,15 @@ public class HttpTools {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 if (method == Request.Method.POST || method == Request.Method.PUT) {
-                    VolleyLog.d("volley", (method == Request.Method.POST ? "post->" : "put->") + requestInfo.url + ",params->" + requestInfo.params.toString());
-                    return requestInfo.params;
+                    VolleyLog.d((method == Request.Method.POST ? "post->%s" : "put->%s"), requestInfo.getUrl() + ",params->" + requestInfo.getParams().toString());
+                    return requestInfo.getParams();
                 } 
                 return super.getParams();
             }
             
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                return requestInfo.headers;
+                return requestInfo.getHeaders();
             }
         };
         request.setTag(this);

@@ -43,5 +43,17 @@ public class RequestInfo {
         }
         return url;
     }
+    
+    public String getUrl() {
+        return url;
+    }
+
+    public Map<String, String> getParams() {
+        return params;
+    }
+
+    public Map<String, String> getHeaders() {
+        return headers;
+    }
 	
 }

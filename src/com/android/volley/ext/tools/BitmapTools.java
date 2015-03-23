@@ -401,6 +401,23 @@ public class BitmapTools {
     }
     
     /**
+     * 清除view上面的任务和标记
+     * clearViewTask
+     * @param view
+     */
+    public void clearViewTask(View view) {
+        @SuppressWarnings("unchecked")
+        WeakReference<ImageContainer> ref = (WeakReference<ImageContainer>) view.getTag(TAG_ID);
+        if (ref != null) {
+            ImageContainer tagContainer = ref.get();
+            if (tagContainer != null) {
+                tagContainer.cancelRequest();
+            }
+        }
+        view.setTag(TAG_ID);
+    }
+    
+    /**
      * 清除掉某张图片的内存缓存
      * clearMemoryCache
      * @param key 图片的url
