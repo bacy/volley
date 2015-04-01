@@ -232,16 +232,15 @@ public class BitmapDecoder {
     }
     
     /**
-     * ����ת��bitmap
+     * 将流文件转换为bitmap对象
      * inputStream2Bitmap
-     * @param context ������
-     * @param key �����Ӧ�ļ���key
-     * @param is ��
+     * @param context 上下文
+     * @param key 
+     * @param is 
      * @param config
      * @param maxWidth
      * @param maxHeight
      * @return
-     * @since 3.5
      */
     public static Bitmap inputStream2Bitmap(Context context, String key, InputStream is, Config config, int maxWidth, int maxHeight) {
         if (is == null) return null;

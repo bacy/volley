@@ -72,8 +72,7 @@ public class Volley {
     }
     
     /**
-     * chenbo add 对于Http请求，暂时没必要缓存，可以使用这个
-     * 无缓存的请求
+     * 涓嶅甫缂撳瓨鐨剅equestQueue
      * newNoCacheRequestQueue
      * @param context
      * @param stack
@@ -122,7 +121,7 @@ public class Volley {
     }
     
     /**
-     * 是否开启volley的日志输出
+     * 鍒ゆ柇鏄惁鎵撳紑volley鐨刲og杈撳嚭
      * @param isOpened
      */
     public void openLog(boolean isOpened) {

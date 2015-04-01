@@ -15,6 +15,8 @@
 
 package com.android.volley.db.sqlite;
 
+import java.util.HashMap;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import android.database.Cursor;
@@ -68,6 +70,29 @@ public class CursorUtils {
             VolleyLog.e(e.getMessage(), e);
         }
 
+        return null;
+    }
+    
+    public static <T> T dbModel2Entity(final DbTools db, DbModel dbModel,Class<?> clazz){
+        if(dbModel!=null){
+            HashMap<String, String> dataMap = dbModel.getDataMap();
+            try {
+                @SuppressWarnings("unchecked")
+                T  entity = (T) clazz.newInstance();
+                for(Entry<String, String> entry : dataMap.entrySet()){
+                    String columnKey = entry.getKey();
+                    Table table = Table.get(db, clazz);
+                    Column column = table.columnMap.get(columnKey);
+                    if (column != null) {
+                        column.setValue(entity, entry.getValue()==null?null:entry.getValue().toString());
+                    }
+                }
+                return entity;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        
         return null;
     }
 

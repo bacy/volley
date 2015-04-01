@@ -54,12 +54,20 @@ public class Column {
         this.setMethod = ColumnUtils.getColumnSetMethod(entityType, field);
     }
 
-    @SuppressWarnings("unchecked")
     public void setValue2Entity(Object entity, Cursor cursor, int index) {
         this.index = index;
         Object value = columnConverter.getFieldValue(cursor, index);
-        if (value == null && defaultValue == null) return;
+        setValue(entity, value);
+    }
 
+    @SuppressWarnings("unchecked")
+    public Object getColumnValue(Object entity) {
+        Object fieldValue = getFieldValue(entity);
+        return columnConverter.fieldValue2ColumnValue(fieldValue);
+    }
+    
+    public void setValue(Object entity,Object value) {
+        if (value == null && defaultValue == null) return;
         if (setMethod != null) {
             try {
                 setMethod.invoke(entity, value == null ? defaultValue : value);
@@ -74,12 +82,6 @@ public class Column {
                 VolleyLog.e(e.getMessage(), e);
             }
         }
-    }
-
-    @SuppressWarnings("unchecked")
-    public Object getColumnValue(Object entity) {
-        Object fieldValue = getFieldValue(entity);
-        return columnConverter.fieldValue2ColumnValue(fieldValue);
     }
 
     public Object getFieldValue(Object entity) {
