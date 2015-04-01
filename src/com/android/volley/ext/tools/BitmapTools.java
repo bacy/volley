@@ -40,7 +40,7 @@ public class BitmapTools {
     // TODO i think nobody will you this id ^_^
     private static final int TAG_ID = 0xffffffff;
     private ImageLoader mImageLoader;
-    private static RequestQueue mRequestQueue;
+    private static RequestQueue sRequestQueue;
     private BitmapDisplayConfig mDisplayConfig;
     private Context mContext;
     private BitmapCache mBitmapCache;
@@ -49,8 +49,8 @@ public class BitmapTools {
     private HashMap<String, BitmapDisplayConfig> configMap = new HashMap<String, BitmapDisplayConfig>();
     
     public static void init(Context context) {
-        if (mRequestQueue == null) {
-            mRequestQueue = Volley.newRequestQueue(context.getApplicationContext());
+        if (sRequestQueue == null) {
+            sRequestQueue = Volley.newRequestQueue(context.getApplicationContext());
         }
     }
 
@@ -59,7 +59,7 @@ public class BitmapTools {
         mDisplayer = new SimpleDisplayer();
         mBitmapCache = BitmapCache.getSigleton(context.getApplicationContext());
         init(context);
-        mImageLoader = new ImageLoader(mRequestQueue, mBitmapCache);
+        mImageLoader = new ImageLoader(sRequestQueue, mBitmapCache);
         mDisplayConfig = new BitmapDisplayConfig();
 
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
@@ -373,8 +373,8 @@ public class BitmapTools {
      * @since 3.6
      */
     public void resume() {
-        if (mRequestQueue != null) {
-            mRequestQueue.resume();
+        if (sRequestQueue != null) {
+            sRequestQueue.resume();
         }
     }
     
@@ -384,8 +384,8 @@ public class BitmapTools {
      * @since 3.6
      */
     public void pause() {
-        if (mRequestQueue != null) {
-            mRequestQueue.pause();
+        if (sRequestQueue != null) {
+            sRequestQueue.pause();
         }
     }
     
@@ -395,8 +395,8 @@ public class BitmapTools {
      * @since 3.6
      */
     public void cancelAllRequest() {
-        if (mRequestQueue != null) {
-            mRequestQueue.cancelAll(mContext);
+        if (sRequestQueue != null) {
+            sRequestQueue.cancelAll(mContext);
         }
     }
     
@@ -459,9 +459,9 @@ public class BitmapTools {
      * @since 3.6
      */
     public void clearDiskCache(Runnable callback) {
-        if (mRequestQueue != null) {
-            ClearCacheRequest request = new ClearCacheRequest(mRequestQueue.getCache(), callback);
-            mRequestQueue.add(request);
+        if (sRequestQueue != null) {
+            ClearCacheRequest request = new ClearCacheRequest(sRequestQueue.getCache(), callback);
+            sRequestQueue.add(request);
         }
     }
     
