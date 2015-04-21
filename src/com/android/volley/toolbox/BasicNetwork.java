@@ -202,8 +202,6 @@ public class BasicNetwork implements Network {
                     throw new NetworkError(networkResponse);
                 }
             } finally {
-                // �²� add
-                // ǰ���return�п��ܵ�����û�йرգ�ʹ��httpClient��ʱ�򣬿��ܵ������ӳ�����
                 try {
                     if (httpResponse != null && httpResponse.getEntity() != null) {
                         httpResponse.getEntity().getContent().close();

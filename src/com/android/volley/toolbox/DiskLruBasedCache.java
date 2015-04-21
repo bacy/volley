@@ -278,6 +278,10 @@ public class DiskLruBasedCache implements Cache {
                     remove(key);
                     Log.e(TAG, "getDiskLruBasedCache - " + e);
                     return null;
+                } catch (NegativeArraySizeException e) {
+                	Log.e(TAG, "getDiskLruBasedCache - " + e);
+                    remove(key);
+                    return null;
                 } catch (OutOfMemoryError e) {
                     VolleyLog.e("Caught OOM for %d byte image, path=%s: %s", file.length(), file.getAbsolutePath(), e.toString());
                     return null;

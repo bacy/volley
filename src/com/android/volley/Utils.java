@@ -12,6 +12,7 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.database.Cursor;
 import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
@@ -210,11 +211,16 @@ public class Utils {
     public static void closeQuietly(/* Auto */Closeable closeable) {
         if (closeable != null) {
             try {
-                closeable.close();
+            	// fix a crash when use huawei old device
+                if (closeable instanceof Cursor) {
+                    ((Cursor)closeable).close();
+                } else {
+                    closeable.close();
+                }
             } catch (RuntimeException rethrown) {
                 throw rethrown;
             } catch (Exception ignored) {
-            }
+            } 
         }
     }
     
