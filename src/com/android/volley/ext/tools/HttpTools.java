@@ -45,6 +45,13 @@ public class HttpTools {
         }
     }
     
+    public static void stop() {
+        if (sRequestQueue != null) {
+            sRequestQueue.stop();
+            sRequestQueue = null;
+        }
+    }
+    
     public static RequestQueue getHttpRequestQueue() {
         return sRequestQueue;
     }
@@ -141,7 +148,7 @@ public class HttpTools {
                 paramsMap.put(key, (String) value);
             }
         }
-        VolleyLog.d("upload->%s" + url + "\nfile->" + fileParams + "\nform->" + paramsMap);
+        VolleyLog.d("upload->%s\tfile->%t\nform->%s", url, fileParams, paramsMap);
         if (httpResult != null) {
             httpResult.onStart();
         }

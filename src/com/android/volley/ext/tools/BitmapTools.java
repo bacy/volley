@@ -53,6 +53,13 @@ public class BitmapTools {
             sRequestQueue = Volley.newRequestQueue(context.getApplicationContext());
         }
     }
+    
+    public static void stop() {
+        if (sRequestQueue != null) {
+        	sRequestQueue.stop();
+        	sRequestQueue = null;
+        }
+    }
 
     public BitmapTools(Context context) {
         mContext = context.getApplicationContext();
@@ -174,9 +181,15 @@ public class BitmapTools {
         mDisplayConfig.errorImageResId = errorImageResId;
     }
     
+    
     public void setDefaultAndImageResId(int resId) {
         mDisplayConfig.defaultImageResId = resId;
         mDisplayConfig.errorImageResId = resId;
+    }
+    
+    public void setDefaultBitmapWH(int w, int h) {
+        mDisplayConfig.bitmapWidth = w;
+        mDisplayConfig.bitmapHeight = h;
     }
 
     public void setAnimation(Animation animation) {
