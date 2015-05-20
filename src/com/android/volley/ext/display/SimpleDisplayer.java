@@ -11,10 +11,9 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.TransitionDrawable;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
@@ -95,20 +94,23 @@ public class SimpleDisplayer implements IDisplayer {
 	}
 
 	private void fadeInDisplay(View imageView,Drawable bitmapDrawable){
-	    if (bitmapDrawable == null) {
-	        return;
-	    }
-        final TransitionDrawable td =
-                new TransitionDrawable(new Drawable[] {
-                        new ColorDrawable(android.R.color.transparent),
-                        bitmapDrawable
-                });
-        if(imageView instanceof ImageView){
-            ((ImageView)imageView).setImageDrawable(td);
-        }else{
-            imageView.setBackgroundDrawable(td);
-        }
-        td.startTransition(200);
+		AlphaAnimation animation = new AlphaAnimation(0, 1);
+	    animation.setDuration(200);
+	    animationDisplay(imageView, bitmapDrawable, animation);
+//	    if (bitmapDrawable == null) {
+//	        return;
+//	    }
+//        final TransitionDrawable td =
+//                new TransitionDrawable(new Drawable[] {
+//                        new ColorDrawable(android.R.color.transparent),
+//                        bitmapDrawable
+//                });
+//        if(imageView instanceof ImageView){
+//            ((ImageView)imageView).setImageDrawable(td);
+//        }else{
+//            imageView.setBackgroundDrawable(td);
+//        }
+//        td.startTransition(200);
     }
     
     

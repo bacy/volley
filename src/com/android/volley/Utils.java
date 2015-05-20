@@ -96,10 +96,13 @@ public class Utils {
         return (long) stats.getBlockSize() * (long) stats.getAvailableBlocks();
     }
     
-    // �ݹ�
+    // 计算文件夹下所有文件的大小
     public static long getFileSize(File f) {
         long size = 0;
         File flist[] = f.listFiles();
+        if (flist == null) {
+            return 0;
+        }
         for (int i = 0; i < flist.length; i++) {
             if (flist[i].isDirectory()) {
                 size = size + getFileSize(flist[i]);
