@@ -45,11 +45,22 @@ Params是表单参数，可以传入string和File类型的参数。当多个file
 ###2.默认开启gzip压缩
 ImageRequest和DownloadRequest不启用Gzip，其他请求均默认开启Gzip
 ###3.支持本地图片（res,asset,sdcard）
+	Bitmap getBitmapFromRes(int resId);
+	Bitmap getBitmapFromAsset(String filePath);
+	Bitmap getBitmapFromContent(String imageUri);
+	Bitmap getBitmapFromFile(String path);
+这四个方法，用来加载本地资源，分别加载Resource，Assets，系统资源，sdcard文件中的图片，这四个方法都是同步的，如果想要异步获取，display也提供加载本地资源的功能。只需要分别加上协议头即可：
+	<code>public static final String SCHEME_RES = "drawable://";
+	public static final String SCHEME_ASSET = "assets://";
+	public static final String SCHEME_CONTENT = "content://";</code>
+（比如需要异步加载一张resource中的图片的话，可以这样定义
+	bitmapTools.display(view,BitmapDecoder.SCHEME_RES+R.drawable.xxx);
+加载sdcard中的文件不需要加协议头）
 ####初始化
 
     BitmapTools.init(context);
     
-####结束
+####结束（可以在app退出后调用）
 
     BitmapTools.stop();
 
