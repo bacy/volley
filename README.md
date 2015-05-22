@@ -22,12 +22,14 @@ HttpTools提供get，post，upload，download，delete多种请求的封装，�
 ####文件下载
 
     DownloadRequest download(String url, String target, final boolean isResume, final HttpCallback httpResult)
+    DownloadRequest download(RequestInfo requestInfo, String target, final boolean isResume, final HttpCallback httpResult)
 
 设置参数isResume为true，即可实现断点续传，DownloadRequest提供stopDownload方法，可以随时停止当前的下载任务，再次下载将会从上次下载的地方开始下载。quitDownloadQueue允许强制关闭下载线程池，退出下载。可以在所有下载任务完成后关闭，节约资源。
 
 ####文件上传
 
     MultiPartRequest<String> upload(final String url, final Map<String, Object> params, final HttpCallback httpResult)
+    MultiPartRequest<String> upload(RequestInfo requestInfo, final HttpCallback httpResult)
 
 Params是表单参数，可以传入string和File类型的参数。当多个file对应一个key的时候。在key的后面加上索引即可。例如：
 
@@ -46,6 +48,10 @@ ImageRequest和DownloadRequest不启用Gzip，其他请求均默认开启Gzip
 ####初始化
 
     BitmapTools.init(context);
+    
+####结束
+
+    BitmapTools.stop();
 
 建议在Application的OnCreate中执行一次
 
