@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Volley by bacy</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Volley</h1>
+      <h2 class="project-tagline">Android Volley, extended function of Android volley sdk.add progress in down and upload.  increase the speed of cache i/o.</h2>
+      <a href="https://github.com/bacy/volley" class="btn">View on GitHub</a>
+      <a href="https://github.com/bacy/volley/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/bacy/volley/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="volley" class="anchor" href="#volley" aria-hidden="true"><span class="octicon octicon-link"></span></a>volley</h1>
+
+<p>需要的权限  </p>
+
+<pre><code>&lt;uses-permission android:name="android.permission.INTERNET" /&gt;
+&lt;uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /&gt;
+</code></pre>
+
+<h3>
+<a id="1支持http-大文件上传以及下载支持断点下载下载中允许暂停下次从暂停地方开始下载" class="anchor" href="#1%E6%94%AF%E6%8C%81http-%E5%A4%A7%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E4%BB%A5%E5%8F%8A%E4%B8%8B%E8%BD%BD%E6%94%AF%E6%8C%81%E6%96%AD%E7%82%B9%E4%B8%8B%E8%BD%BD%E4%B8%8B%E8%BD%BD%E4%B8%AD%E5%85%81%E8%AE%B8%E6%9A%82%E5%81%9C%E4%B8%8B%E6%AC%A1%E4%BB%8E%E6%9A%82%E5%81%9C%E5%9C%B0%E6%96%B9%E5%BC%80%E5%A7%8B%E4%B8%8B%E8%BD%BD" aria-hidden="true"><span class="octicon octicon-link"></span></a>1.支持http 大文件上传以及下载，支持断点下载，下载中允许暂停，下次从暂停地方开始下载</h3>
+
+<h4>
+<a id="初始化" class="anchor" href="#%E5%88%9D%E5%A7%8B%E5%8C%96" aria-hidden="true"><span class="octicon octicon-link"></span></a>初始化</h4>
+
+<p><code>HttpTools.init(context);</code></p>
+
+<p>建议在Application的OnCreate中执行一次</p>
+
+<h4>
+<a id="普通http请求" class="anchor" href="#%E6%99%AE%E9%80%9Ahttp%E8%AF%B7%E6%B1%82" aria-hidden="true"><span class="octicon octicon-link"></span></a>普通http请求</h4>
+
+<p>本来有八种谓词，考虑其他几种不常见，项目中用不上，暂时不提供。
+HttpTools提供get，post，upload，download，delete多种请求的封装，一行代码搞定各种异步请求</p>
+
+<pre><code>get(RequestInfo requestInfo, final HttpCallback httpResult);  
+post(RequestInfo requestInfo, final HttpCallback httpResult);  
+delete(RequestInfo requestInfo, final HttpCallback httpResult);  
+put(RequestInfo requestInfo, final HttpCallback httpResult);
+</code></pre>
+
+<h4>
+<a id="文件下载" class="anchor" href="#%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD" aria-hidden="true"><span class="octicon octicon-link"></span></a>文件下载</h4>
+
+<pre><code>DownloadRequest download(String url, String target, final boolean isResume, final HttpCallback httpResult)
+DownloadRequest download(RequestInfo requestInfo, String target, final boolean isResume, final HttpCallback httpResult)
+</code></pre>
+
+<p>设置参数isResume为true，即可实现断点续传，DownloadRequest提供stopDownload方法，可以随时停止当前的下载任务，再次下载将会从上次下载的地方开始下载。quitDownloadQueue允许强制关闭下载线程池，退出下载。可以在所有下载任务完成后关闭，节约资源。</p>
+
+<h4>
+<a id="文件上传" class="anchor" href="#%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0" aria-hidden="true"><span class="octicon octicon-link"></span></a>文件上传</h4>
+
+<pre><code>MultiPartRequest&lt;String&gt; upload(final String url, final Map&lt;String, Object&gt; params, final HttpCallback httpResult)
+MultiPartRequest&lt;String&gt; upload(RequestInfo requestInfo, final HttpCallback httpResult)
+</code></pre>
+
+<p>Params是表单参数，可以传入string和File类型的参数。当多个file对应一个key的时候。在key的后面加上索引即可。例如：</p>
+
+<pre><code>Map&lt;String,Object&gt; params = new HashMap&lt;String, Object&gt;();  
+params.put("file0", new File("/sdcard/a.jpg"));  
+params.put("file1", new File("/sdcard/a.jpg"));  
+params.put("file2", new File("/sdcard/a.jpg"));  
+params.put("name", "张三");  
+mHttpTools.upload(url, params, httpResult);
+</code></pre>
+
+<p>这样，三个文件都使用同样的key（file）来上传。</p>
+
+<h3>
+<a id="2默认开启gzip压缩" class="anchor" href="#2%E9%BB%98%E8%AE%A4%E5%BC%80%E5%90%AFgzip%E5%8E%8B%E7%BC%A9" aria-hidden="true"><span class="octicon octicon-link"></span></a>2.默认开启gzip压缩</h3>
+
+<p>ImageRequest和DownloadRequest不启用Gzip，其他请求均默认开启Gzip</p>
+
+<h3>
+<a id="3支持本地图片resassetsdcard" class="anchor" href="#3%E6%94%AF%E6%8C%81%E6%9C%AC%E5%9C%B0%E5%9B%BE%E7%89%87resassetsdcard" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.支持本地图片（res,asset,sdcard）</h3>
+
+<h4>
+<a id="初始化-1" class="anchor" href="#%E5%88%9D%E5%A7%8B%E5%8C%96-1" aria-hidden="true"><span class="octicon octicon-link"></span></a>初始化</h4>
+
+<pre><code>BitmapTools.init(context);
+</code></pre>
+
+<p>建议在Application的OnCreate中执行一次</p>
+
+<p>BitmapTools的display方法支持各种图片的异步加载
+BitmapTools的display方法支持各种图片的异步加载</p>
+
+<pre><code>BitmapTools bitmapTools = new BitmapTools(mContext);  
+bitmapTools.display(view, uri);
+</code></pre>
+
+<p>配置类BitmapDisplayConfig.java。可以配置的有：
+默认加载图片，
+加载失败图片，
+图片尺寸，
+加载的动画，
+图片圆角属性。
+BitmapTools中提供多种方法配置BitmapDisplayConfig，配置过后，BitmapTools将采用该配置来加载显示图片，也可以在display方法中带上配置参数，这种方式不会影响整体配置，只为该次展示图片所使用。</p>
+
+<pre><code>bitmapTools.display(final View view, String uri, BitmapDisplayConfig displayConfig);
+</code></pre>
+
+<h3>
+<a id="4diskcache默认使用disklrucachememorycache默认使用lrucache" class="anchor" href="#4diskcache%E9%BB%98%E8%AE%A4%E4%BD%BF%E7%94%A8disklrucachememorycache%E9%BB%98%E8%AE%A4%E4%BD%BF%E7%94%A8lrucache" aria-hidden="true"><span class="octicon octicon-link"></span></a>4.diskcache默认使用DiskLruCache，memoryCache默认使用LruCache</h3>
+
+<h3>
+<a id="5request请求添加进度监听包括上传进度以及加载进度" class="anchor" href="#5request%E8%AF%B7%E6%B1%82%E6%B7%BB%E5%8A%A0%E8%BF%9B%E5%BA%A6%E7%9B%91%E5%90%AC%E5%8C%85%E6%8B%AC%E4%B8%8A%E4%BC%A0%E8%BF%9B%E5%BA%A6%E4%BB%A5%E5%8F%8A%E5%8A%A0%E8%BD%BD%E8%BF%9B%E5%BA%A6" aria-hidden="true"><span class="octicon octicon-link"></span></a>5.request请求添加进度监听（包括上传进度以及加载进度）</h3>
+
+<h3>
+<a id="6允许暂停和继续请求队列" class="anchor" href="#6%E5%85%81%E8%AE%B8%E6%9A%82%E5%81%9C%E5%92%8C%E7%BB%A7%E7%BB%AD%E8%AF%B7%E6%B1%82%E9%98%9F%E5%88%97" aria-hidden="true"><span class="octicon octicon-link"></span></a>6.允许暂停和继续请求队列</h3>
+
+<pre><code>bitmapTools.resume();
+bitmapTools.pause();
+</code></pre>
+
+<h3>
+<a id="7dbtools模块" class="anchor" href="#7dbtools%E6%A8%A1%E5%9D%97" aria-hidden="true"><span class="octicon octicon-link"></span></a>7.DbTools模块</h3>
+
+<p>数据库模块集成了xUtils中DbUtils。<br>
+使用方法参考xUtils。<br>
+注意：<br>
+注解类型不要混淆，需要映射的实体类不要混淆<br>
+添加混淆配置：-keep class * extends java.lang.annotation.Annotation { *; }</p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/bacy/volley">Volley</a> is maintained by <a href="https://github.com/bacy">bacy</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
+
