@@ -1,5 +1,6 @@
 package com.android.volley.ext;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.HashMap;
@@ -11,6 +12,7 @@ public class RequestInfo {
 	public String url ;
 	public Map<String,String> params = new HashMap<String, String>() ;
 	public Map<String, String> headers = new HashMap<String, String>();
+	public Map<String, File> fileParams = new HashMap<String, File>();
 	
     public RequestInfo() {
     }
@@ -60,9 +62,38 @@ public class RequestInfo {
     public Map<String, String> getParams() {
         return params;
     }
+    
+    public Map<String, File> getFileParams() {
+        return fileParams;
+    }
 
     public Map<String, String> getHeaders() {
         return headers;
     }
 	
+    
+    public void put(String key, String value) {
+    	params.put(key, value);
+    }
+    
+    public void put(String key, File file) {
+    	fileParams.put(key, file);
+    }
+    
+    public void putFile(String key, String path) {
+    	fileParams.put(key, new File(path));
+    }
+    
+    public void putAllParams(Map<String, Object> objectParams) {
+    	if (params != null) {
+    		for (String key : objectParams.keySet()) {
+    			Object value = objectParams.get(key);
+    			if (value instanceof String) {
+    				params.put(key, (String)value);
+    			} else if (value instanceof File) {
+    				fileParams.put(key, (File)value);
+    			}
+    		}
+    	}
+    }
 }

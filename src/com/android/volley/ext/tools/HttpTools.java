@@ -117,6 +117,7 @@ public class HttpTools {
     public void put(RequestInfo requestInfo, final HttpCallback httpResult) {
         sendRequest(Request.Method.PUT, requestInfo, httpResult);
     }
+    
 
     /**
      * upload 请求
@@ -128,6 +129,19 @@ public class HttpTools {
      * @since 3.4
      */
     public void upload(final String url, final Map<String, Object> params, final HttpCallback httpResult) {
+    	RequestInfo requestInfo = new RequestInfo();
+    	requestInfo.url = url;
+    	upload(requestInfo, httpResult);
+    }
+    
+    /**
+     * upload 请求
+     * @param requestInfo
+     * @param httpResult
+     */
+    public void upload(final RequestInfo requestInfo, final HttpCallback httpResult) {
+    	
+    	final String url = requestInfo.getUrl();
         if (TextUtils.isEmpty(url)) {
             if (httpResult != null) {
                 httpResult.onStart();
@@ -136,19 +150,9 @@ public class HttpTools {
             }
             return;
         }
-        final Map<String, String> paramsMap = new HashMap<String, String>();
-        final Map<String, File> fileParams = new HashMap<String, File>();
-        Iterator<String> iterator = params.keySet().iterator();
-        while (iterator.hasNext()) {
-            String key = (String) iterator.next();
-            Object value = params.get(key);
-            if (value instanceof File) {
-                fileParams.put(key, (File) value);
-            } else if (value instanceof String) {
-                paramsMap.put(key, (String) value);
-            }
-        }
-        VolleyLog.d("upload->%s\tfile->%t\nform->%s", url, fileParams, paramsMap);
+        final Map<String, String> paramsMap = requestInfo.getParams();
+        final Map<String, File> fileParams = requestInfo.getFileParams();
+        VolleyLog.d("upload->%s\t,file->%s\t,form->%s", url, fileParams, paramsMap);
         if (httpResult != null) {
             httpResult.onStart();
         }
@@ -205,6 +209,7 @@ public class HttpTools {
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> headers = new HashMap<String, String>();
                 headers.put("Charset", "UTF-8");
+                headers.putAll(requestInfo.getHeaders());
                 return headers;
             }
 
@@ -231,6 +236,13 @@ public class HttpTools {
     }
     
     public DownloadRequest download(String url, String target, final boolean isResume, final HttpCallback httpResult) {
+    	RequestInfo requestInfo = new RequestInfo();
+    	requestInfo.url = url;
+    	return download(requestInfo, target, isResume, httpResult);
+    }
+    
+    public DownloadRequest download(final RequestInfo requestInfo, String target, final boolean isResume, final HttpCallback httpResult) {
+    	final String url = requestInfo.getFullUrl();
     	VolleyLog.d("download->%s", url);
         DownloadRequest request = new DownloadRequest(url, new Response.Listener<String>() {
 
@@ -267,6 +279,26 @@ public class HttpTools {
                     httpResult.onCancelled();
                 }
             }
+            
+            @Override
+            public void cancel() {
+                super.cancel();
+                if (httpResult != null) {
+                    httpResult.onCancelled();
+                }
+            }
+            
+            
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+            	Map<String, String> headers = super.getHeaders();
+            	if (headers != null) {
+            		headers.putAll(requestInfo.getHeaders());
+            	} else {
+            		headers = requestInfo.getHeaders();
+            	}
+                return headers;
+            }
         };
         request.setResume(isResume);
         request.setTarget(target);
@@ -285,6 +317,7 @@ public class HttpTools {
         }
         sDownloadQueue.add(request);
         return request;
+    
     }
     
     private void sendRequest(final int method, final RequestInfo requestInfo, final HttpCallback httpResult) {
