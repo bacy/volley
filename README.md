@@ -31,7 +31,7 @@ HttpTools提供get，post，upload，download，delete多种请求的封装，�
     MultiPartRequest<String> upload(final String url, final Map<String, Object> params, final HttpCallback httpResult)
     MultiPartRequest<String> upload(RequestInfo requestInfo, final HttpCallback httpResult)
 
-Params是表单参数，可以传入string和File类型的参数。当多个file对应一个key的时候。在key的后面加上索引即可。例如：
+Params是表单参数，可以传入string和File类型的参数。例如：
 
     Map<String,Object> params = new HashMap<String, Object>();  
     params.put("file0", new File("/sdcard/a.jpg"));  
@@ -39,8 +39,8 @@ Params是表单参数，可以传入string和File类型的参数。当多个file
     params.put("file2", new File("/sdcard/a.jpg"));  
     params.put("name", "张三");  
     mHttpTools.upload(url, params, httpResult);
-
-这样，三个文件都使用同样的key（file）来上传。
+####直接使用Volley的Request
+     public <T> void sendRequest(Request<T> request)
 
 ###2.默认开启gzip压缩
 ImageRequest和DownloadRequest不启用Gzip，其他请求均默认开启Gzip

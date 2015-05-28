@@ -223,11 +223,12 @@ public class HttpTools {
         if (fileParams != null && fileParams.size() != 0) {
             for (Map.Entry<String, File> entry : fileParams.entrySet()) {
                 String key = entry.getKey();
-                Pattern pattern = Pattern.compile("\\d+$");
-                Matcher matcher = pattern.matcher(key);
-                if (matcher.find()) {
-                    key = key.substring(0, key.length() - matcher.group().length());
-                }
+                // TODO
+//                Pattern pattern = Pattern.compile("\\d+$");
+//                Matcher matcher = pattern.matcher(key);
+//                if (matcher.find()) {
+//                    key = key.substring(0, key.length() - matcher.group().length());
+//                }
                 request.addPart(key, entry.getValue());
             }
         }
@@ -318,6 +319,18 @@ public class HttpTools {
         sDownloadQueue.add(request);
         return request;
     
+    }
+    
+    /**
+     * 发送http请求
+     * @param request
+     */
+    public <T> void sendRequest(Request<T> request) {
+    	if (sRequestQueue == null) {
+            sRequestQueue = Volley.newNoCacheRequestQueue(mContext);
+        }
+    	request.setTag(this);
+        sRequestQueue.add(request);
     }
     
     private void sendRequest(final int method, final RequestInfo requestInfo, final HttpCallback httpResult) {
