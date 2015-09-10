@@ -9,6 +9,8 @@ import java.util.Map;
 
 public class RequestInfo {
 	
+	public final String boundary = String.valueOf(System.currentTimeMillis());
+	
 	public String url ;
 	public Map<String,String> params = new HashMap<String, String>() ;
 	public Map<String, String> headers = new HashMap<String, String>();
@@ -77,23 +79,29 @@ public class RequestInfo {
     }
     
     public void put(String key, File file) {
-    	fileParams.put(key, file);
+    	if (fileParams.containsKey(key)) {
+    		fileParams.put(key + boundary + fileParams.size(), file);
+    	} else {
+    		fileParams.put(key, file);
+    	}
     }
     
     public void putFile(String key, String path) {
-    	fileParams.put(key, new File(path));
-    }
-    
-    public void putAllParams(Map<String, Object> objectParams) {
-    	if (params != null) {
-    		for (String key : objectParams.keySet()) {
-    			Object value = objectParams.get(key);
-    			if (value instanceof String) {
-    				params.put(key, (String)value);
-    			} else if (value instanceof File) {
-    				fileParams.put(key, (File)value);
-    			}
-    		}
+    	if (fileParams.containsKey(key)) {
+    		fileParams.put(key + boundary + fileParams.size(), new File(path));
+    	} else {
+    		fileParams.put(key, new File(path));
     	}
     }
+    
+	public void putAllParams(Map<String, Object> objectParams) {
+		for (String key : objectParams.keySet()) {
+			Object value = objectParams.get(key);
+			if (value instanceof String) {
+				put(key, (String) value);
+			} else if (value instanceof File) {
+				put(key, (File) value);
+			}
+		}
+	}
 }

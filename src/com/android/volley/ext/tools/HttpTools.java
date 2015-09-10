@@ -6,8 +6,6 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import android.content.Context;
 import android.text.TextUtils;
@@ -140,6 +138,9 @@ public class HttpTools {
      * @param httpResult
      */
     public void upload(final RequestInfo requestInfo, final HttpCallback httpResult) {
+    	if (sRequestQueue == null) {
+            sRequestQueue = Volley.newNoCacheRequestQueue(mContext);
+        }
     	
     	final String url = requestInfo.getUrl();
         if (TextUtils.isEmpty(url)) {
@@ -223,12 +224,10 @@ public class HttpTools {
         if (fileParams != null && fileParams.size() != 0) {
             for (Map.Entry<String, File> entry : fileParams.entrySet()) {
                 String key = entry.getKey();
-                // TODO
-//                Pattern pattern = Pattern.compile("\\d+$");
-//                Matcher matcher = pattern.matcher(key);
-//                if (matcher.find()) {
-//                    key = key.substring(0, key.length() - matcher.group().length());
-//                }
+                int index = key.indexOf(requestInfo.boundary);
+                if (index > 0) {
+                	key = key.substring(0, index);
+                }
                 request.addPart(key, entry.getValue());
             }
         }
