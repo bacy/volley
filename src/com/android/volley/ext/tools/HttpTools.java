@@ -129,6 +129,7 @@ public class HttpTools {
     public void upload(final String url, final Map<String, Object> params, final HttpCallback httpResult) {
     	RequestInfo requestInfo = new RequestInfo();
     	requestInfo.url = url;
+    	requestInfo.putAllParams(params);
     	upload(requestInfo, httpResult);
     }
     
