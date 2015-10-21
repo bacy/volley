@@ -51,7 +51,7 @@ public class RequestInfo {
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
-            if (sb.lastIndexOf("&") == sb.length() - 1) {
+            if (sb.length() > 0 && sb.lastIndexOf("&") == sb.length() - 1) {
                 sb.deleteCharAt(sb.length() - 1);
             }
             return url + sb.toString();
