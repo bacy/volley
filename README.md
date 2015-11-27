@@ -96,3 +96,4 @@ BitmapTools中提供多种方法配置BitmapDisplayConfig，配置过后，Bitma
 注意：  
 注解类型不要混淆，需要映射的实体类不要混淆  
 添加混淆配置：-keep class * extends java.lang.annotation.Annotation { *; }
+
