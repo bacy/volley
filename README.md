@@ -31,7 +31,7 @@ HttpTools提供get，post，upload，download，delete多种请求的封装，�
     MultiPartRequest<String> upload(final String url, final Map<String, Object> params, final HttpCallback httpResult)
     MultiPartRequest<String> upload(RequestInfo requestInfo, final HttpCallback httpResult)
 
-Params是表单参数，可以传入string和File类型的参数。（可以使用一个key对应多个file）例如：
+Params是一个表单参数，可以传入string和File类型的参数。（可以使用一个key对应多个file）例如：
 
     Map<String,Object> params = new HashMap<String, Object>();  
     params.put("file0", new File("/sdcard/a.jpg"));  
