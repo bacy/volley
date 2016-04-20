@@ -9,7 +9,7 @@ volley
 ###1.支持http 大文件上传以及下载，支持断点下载，下载中允许暂停，下次从暂停地方开始下载
 ####初始化
 <p><code>HttpTools.init(context);</code></p>
-建议在Application的OnCreate中执行一次
+建议在Application的OnCreate中执行一次（可选）
 ####普通http请求
 本来有八种谓词，考虑其他几种不常见，项目中用不上，暂时不提供。
 HttpTools提供get，post，upload，download，delete多种请求的封装，一行代码搞定各种异步请求
